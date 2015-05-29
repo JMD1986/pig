@@ -1,4 +1,6 @@
-require_relative './player'
+require_relative '../db/setup.rb'
+require_relative './player.rb'
+require_relative './leaderboard.rb'
 
 class Pig
   def initialize
@@ -8,11 +10,17 @@ class Pig
 
   def get_players
     puts "Getting player names. Type q when done."
+    player_information = Leaderboard.find(2)
+    player_information.names= @players.name
+    player_information.games_won = 4
+    player_information.game_lost = 2
+    player_information.save
+
     loop do
       print "Player #{@players.count + 1}, what is your name? > "
       input = gets.chomp
       if input == "q" || input == ""
-        return
+        return nil
       else
         @players.push Player.new(input)
       end
@@ -39,6 +47,16 @@ class Pig
     if @players.length == 1
       @players.first
     end
+  end
+
+  def print_leaderboard
+    print "would you like to know the current player scores? (y/n) > "
+    answer = gets.chomp
+    if answer.downcase == "y"
+      print #method for printing out several rows of table
+    elsif answer.downcase == "n"
+      print "not very curious are we?"
+    else break
   end
 
   def take_turn player
